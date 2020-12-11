@@ -1,6 +1,6 @@
 # Media driver builder
 
-A simple builder for intel media river.
+A simple builder for intel media driver.
 
 ## Quick start
 
