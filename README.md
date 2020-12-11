@@ -21,7 +21,7 @@ A simple builder for intel media river.
       - GmmLib: intel-gmmlib-20.3.2
       - Libva: 2.9.0
 
-  2.  edit build script
+  2.  edit build script `./build_media_driver.sh`
 
       ```
       MEDIA_DRIVER_VERSION="20.3.0"
