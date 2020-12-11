@@ -37,7 +37,7 @@ A simple builder for intel media river.
 
   4.  get output library
 
-      All packages will be install into out/ directory
+      All packages will be install into `out/ `directory
 
 - clean
 
