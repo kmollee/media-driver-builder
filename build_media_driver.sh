@@ -1,6 +1,9 @@
 #!/bin/bash
 
-PWD="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+PWD="$(
+	cd "$(dirname "$0")" >/dev/null 2>&1
+	pwd -P
+)"
 WORK_DIR="${PWD}/workspace"
 OUT_DIR="${PWD}/out"
 DOWNLOAD_DIR="${PWD}/download"
@@ -8,33 +11,29 @@ MEDIA_DRIVER_VERSION="20.3.0"
 GMMLIB_VERSION="20.3.2"
 LIBVA_VERSION="2.9.0"
 
-
 function build() {
 	[ -d ${WORK_DIR} ] || mkdir -p ${WORK_DIR}
 	[ -d ${OUT_DIR} ] || mkdir -p ${OUT_DIR}
 	[ -d ${DOWNLOAD_DIR} ] || mkdir -p ${DOWNLOAD_DIR}
 
-	[ -f media-driver.tar.gz ] || wget -O "${DOWNLOAD_DIR}/media-driver.tar.gz" https://github.com/intel/media-driver/archive/intel-media-${MEDIA_DRIVER_VERSION}.tar.gz 
-	[ -f libva.tar.gz ] || wget -O "${DOWNLOAD_DIR}/libva.tar.gz" https://github.com/intel/libva/archive/${LIBVA_VERSION}.tar.gz
-	[ -f gmmlib.tar.gz ] || wget -O "${DOWNLOAD_DIR}/gmmlib.tar.gz" https://github.com/intel/gmmlib/archive/intel-gmmlib-${GMMLIB_VERSION}.tar.gz
-
+	[ -f ${DOWNLOAD_DIR}/media-driver.tar.gz ] || wget -O "${DOWNLOAD_DIR}/media-driver.tar.gz" https://github.com/intel/media-driver/archive/intel-media-${MEDIA_DRIVER_VERSION}.tar.gz
+	[ -f ${DOWNLOAD_DIR}/libva.tar.gz ] || wget -O "${DOWNLOAD_DIR}/libva.tar.gz" https://github.com/intel/libva/archive/${LIBVA_VERSION}.tar.gz
+	[ -f ${DOWNLOAD_DIR}/gmmlib.tar.gz ] || wget -O "${DOWNLOAD_DIR}/gmmlib.tar.gz" https://github.com/intel/gmmlib/archive/intel-gmmlib-${GMMLIB_VERSION}.tar.gz
 
 	tar xf "${DOWNLOAD_DIR}/media-driver.tar.gz" -C ${WORK_DIR} --one-top-level=media-driver --strip-components 1
 	tar xf "${DOWNLOAD_DIR}/libva.tar.gz" -C ${WORK_DIR} --one-top-level=libva --strip-components 1
 	tar xf "${DOWNLOAD_DIR}/gmmlib.tar.gz" -C ${WORK_DIR} --one-top-level=gmmlib --strip-components 1
 
-
-	echo "start build gmmlib..."
+	echo "start build & install gmmlib into system..."
 	cd ${WORK_DIR}/gmmlib
 	mkdir -p build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release ..
-	make -j"$(nproc)" && make DESTDIR=${OUT_DIR} install -s
+	make -j"$(nproc)" && make install && make DESTDIR=${OUT_DIR} install -s
 
-	echo "start build libva..."
+	echo "start build & install libva into system..."
 	cd ${WORK_DIR}/libva
 	meson build
-	cd build && ninja && DESTDIR=${OUT_DIR} ninja install
-
+	cd build && ninja && ninja install && DESTDIR=${OUT_DIR} ninja install
 
 	echo "start build media-driver..."
 	mkdir -p ${WORK_DIR}/media-driver/build
@@ -53,16 +52,16 @@ function clean() {
 }
 
 case $1 in
-	build)
-		build
-		;;
-	clean)
-		clean
-		;;
-	*)
+build)
+	build
+	;;
+clean)
+	clean
+	;;
+*)
 	echo "Usage: $0 {build|clean}"
 	exit 1
+	;;
 esac
 
 exit 0
-	
