@@ -2,7 +2,15 @@
 
 A simple builder for intel media driver.
 
+
+## Install dependency library
+
+```
+apt update && apt install git build-essential vim cmake meson wget pkg-config libdrm libdrm-dev -y
+```
+
 ## Quick start
+
 
 - build
 
