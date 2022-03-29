@@ -6,7 +6,7 @@ A simple builder for intel media driver.
 ## Install dependency library
 
 ```
-apt update && apt install git build-essential vim cmake meson wget pkg-config libdrm libdrm-dev -y
+apt update && apt install git build-essential vim cmake meson wget pkg-config libdrm libdrm-dev autoconf libtool libdrm-dev xorg xorg-dev openbox libx11-dev libgl1-mesa-glx libgl1-mesa-dev -y
 ```
 
 ## Quick start
